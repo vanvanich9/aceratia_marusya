@@ -2,12 +2,12 @@ from flask import Flask, request
 from flask_cors import CORS
 
 import json
-app = Flask(__name__)
+application = Flask(__name__)
 data = {}
-CORS(app)
+CORS(application)
 
 
-@app.route('/acetaria', methods=["GET", "POST", "OPTIONS"])
+@application.route('/acetaria', methods=["GET", "POST", "OPTIONS"])
 def choose_category():
     answers = ["нет", "нет", "да", "нет", "да", "нет", "нет", "да"]
     choose = ["Дизайн интерфейсов",
@@ -43,7 +43,7 @@ def choose_category():
         if req["session"]["user_id"] not in data:
             data[req["session"]["user_id"]] = {"count": 0, "points": 0}
         if data[req["session"]["user_id"]]["count"] == 0 and not (("acetaria" in req["request"]["command"] or "ацетария" in req["request"]["command"]) \
-                and ("вездекод" in req["request"]["command"] or "вездеход" in req["request"]["command"])):
+                and ("вездекод" in req["request"]["command"] or "вездеход" in req["request"]["command"] or "везде код" in req["request"]["command"])):
             response["response"]["text"] = "^Я не хочу на такое отвечать!^"
             response["response"]["end_session"] = True
         else:
@@ -157,7 +157,8 @@ def choose_category():
                 data[req["session"]["user_id"]]['count'] %= 9
                 response["response"]["end_session"] = True
         return json.dumps(response)
+    return "Навык для Маруси"
 
 
 if __name__ == '__main__':
-    app.run(host="localhost", port=3000, debug=True)
+    application.run(host="localhost", port=3000, debug=False)
